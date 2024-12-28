@@ -76,25 +76,25 @@
     <div class="calculator">
         <input type="text" class="display" id="display" readonly>
         <div class="buttons">
-            <button class="button" onclick="appendNumber('7')">7</button>
-            <button class="button" onclick="appendNumber('8')">8</button>
-            <button class="button" onclick="appendNumber('9')">9</button>
-            <button class="button operator" onclick="chooseOperator('/')">/</button>
+            <button class="button" onclick="appendInput('7')">7</button>
+            <button class="button" onclick="appendInput('8')">8</button>
+            <button class="button" onclick="appendInput('9')">9</button>
+            <button class="button operator" onclick="appendInput('/')">/</button>
 
-            <button class="button" onclick="appendNumber('4')">4</button>
-            <button class="button" onclick="appendNumber('5')">5</button>
-            <button class="button" onclick="appendNumber('6')">6</button>
-            <button class="button operator" onclick="chooseOperator('*')">×</button>
+            <button class="button" onclick="appendInput('4')">4</button>
+            <button class="button" onclick="appendInput('5')">5</button>
+            <button class="button" onclick="appendInput('6')">6</button>
+            <button class="button operator" onclick="appendInput('*')">×</button>
 
-            <button class="button" onclick="appendNumber('1')">1</button>
-            <button class="button" onclick="appendNumber('2')">2</button>
-            <button class="button" onclick="appendNumber('3')">3</button>
-            <button class="button operator" onclick="chooseOperator('-')">-</button>
+            <button class="button" onclick="appendInput('1')">1</button>
+            <button class="button" onclick="appendInput('2')">2</button>
+            <button class="button" onclick="appendInput('3')">3</button>
+            <button class="button operator" onclick="appendInput('-')">-</button>
 
-            <button class="button" onclick="appendNumber('0')">0</button>
-            <button class="button" onclick="appendNumber('.')">.</button>
+            <button class="button" onclick="appendInput('0')">0</button>
+            <button class="button" onclick="appendInput('.')">.</button>
             <button class="button clear" onclick="clearDisplay()">C</button>
-            <button class="button operator" onclick="chooseOperator('+')">+</button>
+            <button class="button operator" onclick="appendInput('+')">+</button>
 
             <button class="button" style="grid-column: span 4;" onclick="computeResult()">=</button>
         </div>
@@ -103,11 +103,9 @@
     <script>
         let display = document.getElementById('display');
         let currentInput = '';
-        let operator = null;
-        let previousInput = '';
 
-        function appendNumber(number) {
-            currentInput += number;
+        function appendInput(value) {
+            currentInput += value;
             updateDisplay();
         }
 
@@ -117,44 +115,18 @@
 
         function clearDisplay() {
             currentInput = '';
-            operator = null;
-            previousInput = '';
             updateDisplay();
-        }
-
-        function chooseOperator(op) {
-            if (currentInput === '') return;
-            if (operator !== null) computeResult();
-            operator = op;
-            previousInput = currentInput;
-            currentInput = '';
         }
 
         function computeResult() {
-            if (operator === null || currentInput === '') return;
-            const prev = parseFloat(previousInput);
-            const curr = parseFloat(currentInput);
-            let result;
-            switch (operator) {
-                case '+':
-                    result = prev + curr;
-                    break;
-                case '-':
-                    result = prev - curr;
-                    break;
-                case '*':
-                    result = prev * curr;
-                    break;
-                case '/':
-                    result = prev / curr;
-                    break;
-                default:
-                    return;
+            try {
+                // Use eval to calculate the result
+                currentInput = eval(currentInput).toString();
+                updateDisplay();
+            } catch (error) {
+                display.value = 'Error';
+                currentInput = '';
             }
-            currentInput = result.toString();
-            operator = null;
-            previousInput = '';
-            updateDisplay();
         }
     </script>
 </body>
